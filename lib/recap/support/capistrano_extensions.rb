@@ -15,7 +15,8 @@ module Recap::Support::CapistranoExtensions
 
   # Put a string into a file as the application user
   def put_as_app(string, path)
-    put string, "/tmp/recap-put-as-app"
+    put string, "/tmp/recap-put-as-app", :via => :scp
+    sudo "chgrp #{application_group} /tmp/recap-put-as-app"
     as_app "cp /tmp/recap-put-as-app #{path} && chmod g+rw #{path}", "/"
   ensure
     run "rm /tmp/recap-put-as-app"
