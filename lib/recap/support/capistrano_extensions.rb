@@ -44,6 +44,11 @@ module Recap::Support::CapistranoExtensions
     run "cd #{deploy_to} && umask 002 && sg #{application_group} -c \"git #{command}\""
   end
 
+  # Extract the host segment of the git repository
+  def repository_host
+    %r{\A\S+@(\S+):\S+$\z}.match(repository)[1]
+  end
+
   # Capture the result of a git command run within the `deploy_to` directory
   def capture_git(command)
     capture "cd #{deploy_to} && umask 002 && sg #{application_group} -c 'git #{command}'"
