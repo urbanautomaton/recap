@@ -100,7 +100,7 @@ module Recap::Support::CapistranoExtensions
 
   def claim_lock(message)
     begin
-      sudo "[ ! -e #{deploy_lock_file} ] && echo '#{message}' > #{deploy_lock_file}"
+      sudo %Q{su - #{application_user} -c "[ ! -e #{deploy_lock_file} ] && echo '#{message}' > #{deploy_lock_file}"}
     rescue Exception => e
       abort %{
 Failed to claim lock: #{capture("cat #{deploy_lock_file}")}
@@ -112,7 +112,7 @@ and try again.
   end
 
   def release_lock
-    sudo "rm -rf #{deploy_lock_file}"
+    sudo %Q{su - #{application_user} -c 'rm -rf #{deploy_lock_file}'}
   end
 
   def transaction_with_lock(message)
